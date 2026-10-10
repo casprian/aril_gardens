@@ -406,6 +406,8 @@
         </div>
 
         <form id="contactForm" class="mt-10 bg-white border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft reveal-on-scroll" data-delay="1" novalidate>
+          <!-- Honeypot spam trap: hidden from people, bots fill it in -->
+          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
               <label for="name" class="block text-sm font-semibold text-leaf-900">Name</label>
@@ -626,6 +628,17 @@
     const contactForm = document.getElementById('contactForm');
     const formSuccess = document.getElementById('formSuccess');
 
+    // Web3Forms: get a free access key at https://web3forms.com (enter the email that should receive inquiries).
+    const WEB3FORMS_ACCESS_KEY = '23ba790d-e2c9-45fb-a56f-6d807a97ac2e';
+
+    // Show a status message under the form (green = success, red = error).
+    function showStatus(message, ok) {
+      formSuccess.textContent = message;
+      formSuccess.classList.remove('hidden', 'text-green-700', 'text-red-600');
+      formSuccess.classList.add(ok ? 'text-green-700' : 'text-red-600');
+      formSuccess.setAttribute('role', 'status');
+    }
+
     const validators = {
       name: (value) => value.trim().length >= 2 || 'Please enter your name (min 2 characters).',
       email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Please enter a valid email address.',
@@ -648,8 +661,8 @@
       }
     }
 
-    // Validate on submit and show success feedback only when all inputs pass.
-    contactForm.addEventListener('submit', (event) => {
+    // Validate on submit, then send to Web3Forms. Success is shown only if the request succeeds.
+    contactForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       formSuccess.classList.add('hidden');
 
@@ -668,9 +681,49 @@
         }
       });
 
-      if (isValid) {
-        formSuccess.classList.remove('hidden');
-        contactForm.reset();
+      if (!isValid) return;
+
+      if (WEB3FORMS_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+        showStatus('Inquiry form is not configured yet. Please contact us directly.', false);
+        return;
+      }
+
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: 'New inquiry from Aril Gardens website',
+            from_name: 'Aril Gardens Website',
+            name: String(formData.get('name')).trim(),
+            email: String(formData.get('email')).trim(),
+            phone: String(formData.get('phone')).trim(),
+            interest: String(formData.get('interest')),
+            message: String(formData.get('message')).trim(),
+            botcheck: String(formData.get('botcheck') || '')
+          })
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          showStatus('Thank you! Your inquiry has been submitted successfully.', true);
+          contactForm.reset();
+          selectedPlotHint.classList.add('hidden');
+          plotCells.forEach((cell) => cell.classList.remove('is-selected'));
+        } else {
+          showStatus('Sorry, we could not send your inquiry. Please try again.', false);
+        }
+      } catch (error) {
+        showStatus('Network error. Please check your connection and try again.', false);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
       }
     });
 

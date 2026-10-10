@@ -331,6 +331,8 @@
         </div>
 
         <form id="bookingForm" class="mt-10 bg-white border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft" novalidate>
+          <!-- Honeypot spam trap: hidden from people, bots fill it in -->
+          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
               <label for="name" class="block text-sm font-semibold text-leaf-900">Name</label>
@@ -443,6 +445,16 @@
     const pad = (n) => String(n).padStart(2, '0');
     eventDateInput.min = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
 
+    // Web3Forms: get a free access key at https://web3forms.com (enter the email that should receive bookings).
+    const WEB3FORMS_ACCESS_KEY = '23ba790d-e2c9-45fb-a56f-6d807a97ac2e';
+
+    // Show a status message under the form (green = success, red = error).
+    function showStatus(message, ok) {
+      formSuccess.textContent = message;
+      formSuccess.classList.remove('hidden', 'text-green-700', 'text-red-600');
+      formSuccess.classList.add(ok ? 'text-green-700' : 'text-red-600');
+    }
+
     // Validation rules: return true when valid, otherwise an error message.
     const validators = {
       name: (v) => v.trim().length >= 2 || 'Please enter your name (min 2 characters).',
@@ -501,8 +513,8 @@
     eventTypeSelect.addEventListener('change', () => highlight(eventCards, (el) => el.dataset.event === eventTypeSelect.value));
     packageSelect.addEventListener('change', () => highlight(packageCards, (el) => el.dataset.package === packageSelect.value));
 
-    // Validate on submit.
-    bookingForm.addEventListener('submit', (event) => {
+    // Validate on submit, then send to Web3Forms. Success is shown only if the request succeeds.
+    bookingForm.addEventListener('submit', async (event) => {
       event.preventDefault();
       formSuccess.classList.add('hidden');
 
@@ -515,16 +527,56 @@
         if (result !== true) isValid = false;
       });
 
-      if (isValid) {
-        // Demo only: no backend is connected. Replace with a fetch() to your endpoint.
-        formSuccess.textContent = `Thank you, ${String(data.get('name')).trim()}! We received your request and will contact you shortly.`;
-        formSuccess.classList.remove('hidden');
-        bookingForm.reset();
-        highlight(eventCards, () => false);
-        highlight(packageCards, () => false);
-      } else {
+      if (!isValid) {
         const firstInvalid = bookingForm.querySelector('.border-red-500');
         if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      if (WEB3FORMS_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+        showStatus('Booking form is not configured yet. Please contact us directly.', false);
+        return;
+      }
+
+      const submitBtn = bookingForm.querySelector('button[type="submit"]');
+      const originalLabel = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_ACCESS_KEY,
+            subject: 'New clubhouse booking request - Aril Gardens',
+            from_name: 'Aril Gardens Website',
+            name: String(data.get('name')).trim(),
+            email: String(data.get('email')).trim(),
+            phone: String(data.get('phone')).trim(),
+            event_type: String(data.get('eventType')),
+            event_date: String(data.get('eventDate')),
+            guests: String(data.get('guests')),
+            package: String(data.get('package')),
+            message: String(data.get('message') || '').trim(),
+            botcheck: String(data.get('botcheck') || '')
+          })
+        });
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          showStatus(`Thank you, ${String(data.get('name')).trim()}! We received your request and will contact you shortly.`, true);
+          bookingForm.reset();
+          highlight(eventCards, () => false);
+          highlight(packageCards, () => false);
+        } else {
+          showStatus('Sorry, we could not send your request. Please try again.', false);
+        }
+      } catch (error) {
+        showStatus('Network error. Please check your connection and try again.', false);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
       }
     });
 
