@@ -39,7 +39,21 @@ jobs:
               missing=1
             fi
           done
-          exit $missing
+          [ "$missing" -eq 0 ] || exit 1
+
+          # FTP_SERVER must be a bare hostname or IP: no protocol, path, port or whitespace.
+          if [[ "$FTP_SERVER" =~ [[:space:]] ]]; then
+            echo "::error::FTP_SERVER contains whitespace or a newline. Re-save the secret with only the hostname."
+            exit 1
+          fi
+          if [[ "$FTP_SERVER" == *"://"* || "$FTP_SERVER" == */* || "$FTP_SERVER" == *:* ]]; then
+            echo "::error::FTP_SERVER must be a bare hostname or IP (no ftp://, path or :port)."
+            exit 1
+          fi
+          if ! getent hosts "$FTP_SERVER" > /dev/null; then
+            echo "::error::FTP_SERVER does not resolve in public DNS. Check the hostname for typos, or use the server IP."
+            exit 1
+          fi
 
       - name: Build site with injected values
         run: |
