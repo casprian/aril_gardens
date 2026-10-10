@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Book the Aril Gardens Clubhouse for private parties: 4 luxury rooms, swimming pool, party lawn and barbecue station in a 3-acre farm retreat." />
+  <title>Clubhouse Event Booking | Aril Gardens</title>
+
+  <!-- Tailwind CSS CDN (with forms plugin for styled inputs) -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            leaf: {
+              50: '#f4f9f3', 100: '#e7f3e4', 200: '#c7e5bf', 300: '#9ed390', 400: '#74bb63',
+              500: '#4d9d3f', 600: '#3a7a31', 700: '#2e5f29', 800: '#284c24', 900: '#233f21'
+            },
+            earth: {
+              50: '#fbf7ef', 100: '#f5edd9', 200: '#ebdab1', 300: '#e0c27f', 400: '#d2a451',
+              500: '#c48730', 600: '#a66b26', 700: '#85511f', 800: '#6b421f', 900: '#57371d'
+            }
+          },
+          fontFamily: {
+            heading: ['Poppins', 'ui-sans-serif', 'system-ui'],
+            body: ['Manrope', 'ui-sans-serif', 'system-ui']
+          },
+          boxShadow: {
+            soft: '0 10px 30px -15px rgba(29, 53, 36, 0.35)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: linear-gradient(180deg, #f4f9f3 0%, #fbf7ef 44%, #ffffff 100%);
+      color: #233f21;
+    }
+
+    .hero-overlay {
+      background: radial-gradient(1200px 500px at 10% 20%, rgba(77, 157, 63, 0.28), transparent 62%),
+                  radial-gradient(900px 400px at 90% 30%, rgba(196, 135, 48, 0.22), transparent 58%);
+    }
+
+    .glass-nav {
+      backdrop-filter: saturate(140%) blur(10px);
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    /* Scroll reveal */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal-on-scroll.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-on-scroll[data-delay="1"] { transition-delay: 0.1s; }
+    .reveal-on-scroll[data-delay="2"] { transition-delay: 0.2s; }
+    .reveal-on-scroll[data-delay="3"] { transition-delay: 0.3s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-on-scroll { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* Selectable event / package cards */
+    .choice-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .choice-card:hover { transform: translateY(-3px); }
+    .choice-card.is-selected {
+      border-color: #c48730;
+      box-shadow: 0 10px 28px -16px rgba(196, 135, 48, 0.8);
+      background-color: #fffaf0;
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <!-- Sticky Navigation -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-leaf-100/80 glass-nav">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main Navigation">
+      <div class="h-16 flex items-center justify-between">
+        <a href="index.html" class="font-heading text-lg font-extrabold tracking-wide text-leaf-800">Aril Gardens</a>
+
+        <button id="menuButton" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-leaf-200 text-leaf-700" aria-label="Toggle mobile menu" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <ul class="hidden md:flex items-center gap-7 text-sm font-semibold text-leaf-800">
+          <li><a class="hover:text-earth-600 transition" href="index.html">Home</a></li>
+          <li><a class="hover:text-earth-600 transition" href="index.html#farm-plots">Farm Plots</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#events">Events</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#amenities">Amenities</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#packages">Packages</a></li>
+          <li><a class="px-4 py-2 rounded-lg bg-earth-500 text-white hover:bg-earth-600 transition" href="#booking">Book Now</a></li>
+        </ul>
+      </div>
+
+      <div id="mobileMenu" class="md:hidden hidden pb-4">
+        <ul class="space-y-1 text-sm font-semibold text-leaf-800">
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="index.html">Home</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="index.html#farm-plots">Farm Plots</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#events">Events</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#amenities">Amenities</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#packages">Packages</a></li>
+          <li><a class="block px-3 py-2 rounded-lg bg-earth-500 text-white" href="#booking">Book Now</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="relative pt-28 pb-20 overflow-hidden">
+      <div class="absolute inset-0 hero-overlay pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <span class="inline-flex items-center rounded-full bg-earth-100 text-earth-800 px-3 py-1 text-xs font-bold tracking-wide uppercase">
+              <i data-lucide="party-popper" class="w-4 h-4 mr-2"></i>
+              Private Events in Nature
+            </span>
+            <h1 class="mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-leaf-900">
+              Celebrate Under Open Skies at the <span class="text-earth-600">Aril Gardens Clubhouse</span>
+            </h1>
+            <p class="mt-5 text-base sm:text-lg text-leaf-800/90 max-w-xl">
+              Four luxury rooms, a swimming pool, a party lawn and a barbecue station, all set within a peaceful 3-acre farm retreat. Perfect for small private parties and intimate gatherings.
+            </p>
+            <div class="mt-7 flex flex-col sm:flex-row gap-3">
+              <a href="#booking" class="inline-flex justify-center items-center px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold shadow-soft hover:bg-leaf-700 transition">Check Availability</a>
+              <a href="#events" class="inline-flex justify-center items-center px-6 py-3 rounded-xl border border-earth-500 text-earth-700 bg-earth-50 font-semibold hover:bg-earth-100 transition">Explore Event Ideas</a>
+            </div>
+          </div>
+
+          <!-- Quick facts card -->
+          <div class="bg-white/90 border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft">
+            <h2 class="font-heading text-xl font-bold text-leaf-900">At a Glance</h2>
+            <div class="mt-5 grid grid-cols-2 gap-4">
+              <div class="rounded-2xl bg-leaf-50 border border-leaf-100 p-4">
+                <p class="font-heading text-3xl font-extrabold text-leaf-700">4</p>
+                <p class="text-sm font-semibold text-leaf-800">Luxury Rooms</p>
+              </div>
+              <div class="rounded-2xl bg-earth-50 border border-earth-100 p-4">
+                <p class="font-heading text-3xl font-extrabold text-earth-600">3</p>
+                <p class="text-sm font-semibold text-leaf-800">Acre Retreat</p>
+              </div>
+              <div class="rounded-2xl bg-earth-50 border border-earth-100 p-4">
+                <i class="fa-solid fa-person-swimming text-2xl text-earth-600"></i>
+                <p class="mt-1 text-sm font-semibold text-leaf-800">Swimming Pool</p>
+              </div>
+              <div class="rounded-2xl bg-leaf-50 border border-leaf-100 p-4">
+                <i class="fa-solid fa-fire-burner text-2xl text-leaf-700"></i>
+                <p class="mt-1 text-sm font-semibold text-leaf-800">BBQ Station</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event types -->
+    <section id="events" class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Events We Love to Host</h2>
+          <p class="mt-3 text-leaf-800/90">Select an event type to pre-fill your booking request.</p>
+        </div>
+
+        <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5" id="eventCards">
+          <button type="button" data-event="Birthday Party" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-cake-candles"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Birthday Parties</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Pool fun, lawn games and a barbecue spread for all ages.</p>
+          </button>
+          <button type="button" data-event="Family Reunion" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-people-roof"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Family Reunions</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Room to relax, stay over and catch up in a calm setting.</p>
+          </button>
+          <button type="button" data-event="Anniversary / Celebration" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-champagne-glasses"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Anniversaries</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Intimate evenings on the lawn with a romantic garden ambiance.</p>
+          </button>
+          <button type="button" data-event="Corporate Retreat" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-briefcase"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Team Outings</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A refreshing break from the office for small teams.</p>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Amenities -->
+    <section id="amenities" class="py-16 bg-leaf-50/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Everything for a Memorable Day</h2>
+          <p class="mt-3 text-leaf-800/90">Thoughtfully designed spaces that make hosting effortless.</p>
+        </div>
+
+        <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <article class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="w-12 h-12 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center text-lg"><i class="fa-solid fa-bed"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">4 Luxury Rooms</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Comfortable rooms for guests to freshen up or stay overnight.</p>
+          </article>
+          <article class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="w-12 h-12 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i data-lucide="waves"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Swimming Pool</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A private pool to cool off and keep guests entertained.</p>
+          </article>
+          <article class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="w-12 h-12 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center text-lg"><i class="fa-solid fa-seedling"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Party Lawn</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A spacious green lawn for music, games, dining and décor setups.</p>
+          </article>
+          <article class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="w-12 h-12 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center text-lg"><i class="fa-solid fa-fire-burner"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Barbecue Station</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A dedicated grill area for live cooking and relaxed evenings.</p>
+          </article>
+          <article class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="w-12 h-12 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i data-lucide="leaf"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Peaceful Ambiance</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Surrounded by greenery, away from city noise and crowds.</p>
+          </article>
+          <article class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="w-12 h-12 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i data-lucide="lock"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Exclusive Use</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Small, private bookings so your group enjoys the space to itself.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Packages (no prices published; quote on request) -->
+    <section id="packages" class="py-16">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Choose Your Experience</h2>
+          <p class="mt-3 text-leaf-800/90">Flexible options to fit your plans. Pricing is shared on request.</p>
+        </div>
+
+        <div class="mt-10 grid md:grid-cols-3 gap-5" id="packageCards">
+          <article class="choice-card bg-white border border-leaf-100 rounded-3xl p-6 shadow-soft reveal-on-scroll" data-delay="1" data-package="Day Event">
+            <h3 class="font-heading text-xl font-bold text-leaf-900">Day Event</h3>
+            <p class="mt-1 text-sm text-earth-700 font-semibold">Daytime celebration</p>
+            <ul class="mt-4 space-y-2 text-sm text-leaf-800">
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Party lawn and pool access</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Barbecue station</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Rooms for freshening up</li>
+            </ul>
+            <button type="button" class="select-package mt-6 w-full px-4 py-2.5 rounded-xl border border-leaf-600 text-leaf-700 font-semibold hover:bg-leaf-50 transition">Select Package</button>
+          </article>
+
+          <article class="choice-card bg-white border border-leaf-100 rounded-3xl p-6 shadow-soft reveal-on-scroll relative" data-delay="2" data-package="Evening Party">
+            <span class="absolute -top-3 left-6 rounded-full bg-earth-500 text-white text-xs font-bold px-3 py-1">Most Popular</span>
+            <h3 class="font-heading text-xl font-bold text-leaf-900">Evening Party</h3>
+            <p class="mt-1 text-sm text-earth-700 font-semibold">Sunset to late night</p>
+            <ul class="mt-4 space-y-2 text-sm text-leaf-800">
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Party lawn, pool and BBQ</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Ambient evening setup</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Rooms for guests</li>
+            </ul>
+            <button type="button" class="select-package mt-6 w-full px-4 py-2.5 rounded-xl border border-leaf-600 text-leaf-700 font-semibold hover:bg-leaf-50 transition">Select Package</button>
+          </article>
+
+          <article class="choice-card bg-white border border-leaf-100 rounded-3xl p-6 shadow-soft reveal-on-scroll" data-delay="3" data-package="Overnight Stay">
+            <h3 class="font-heading text-xl font-bold text-leaf-900">Overnight Stay</h3>
+            <p class="mt-1 text-sm text-earth-700 font-semibold">Celebrate and stay</p>
+            <ul class="mt-4 space-y-2 text-sm text-leaf-800">
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> All 4 luxury rooms</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Full access to all amenities</li>
+              <li class="flex gap-2"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Relaxed next-morning checkout</li>
+            </ul>
+            <button type="button" class="select-package mt-6 w-full px-4 py-2.5 rounded-xl border border-leaf-600 text-leaf-700 font-semibold hover:bg-leaf-50 transition">Select Package</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- How booking works -->
+    <section class="py-16 bg-earth-50/60">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-center font-heading text-3xl sm:text-4xl font-bold text-leaf-900">How Booking Works</h2>
+        <div class="mt-10 grid sm:grid-cols-3 gap-5">
+          <div class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="1">
+            <span class="inline-flex w-9 h-9 items-center justify-center rounded-full bg-leaf-600 text-white font-bold">1</span>
+            <h3 class="mt-3 font-heading font-bold text-leaf-900">Send a request</h3>
+            <p class="mt-1 text-sm text-leaf-800/90">Share your date, guest count and event type below.</p>
+          </div>
+          <div class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="2">
+            <span class="inline-flex w-9 h-9 items-center justify-center rounded-full bg-leaf-600 text-white font-bold">2</span>
+            <h3 class="mt-3 font-heading font-bold text-leaf-900">Get a quote</h3>
+            <p class="mt-1 text-sm text-leaf-800/90">Our team confirms availability and shares pricing.</p>
+          </div>
+          <div class="bg-white border border-leaf-100 rounded-2xl p-6 shadow-soft reveal-on-scroll" data-delay="3">
+            <span class="inline-flex w-9 h-9 items-center justify-center rounded-full bg-leaf-600 text-white font-bold">3</span>
+            <h3 class="mt-3 font-heading font-bold text-leaf-900">Confirm and celebrate</h3>
+            <p class="mt-1 text-sm text-leaf-800/90">Lock in your date and enjoy a stress-free event.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Booking form -->
+    <section id="booking" class="py-16">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Request Your Booking</h2>
+          <p class="mt-3 text-leaf-800/90">Tell us about your event and we will get back with availability.</p>
+        </div>
+
+        <form id="bookingForm" class="mt-10 bg-white border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block text-sm font-semibold text-leaf-900">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="Your full name" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="name"></p>
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-semibold text-leaf-900">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="you@example.com" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="email"></p>
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-semibold text-leaf-900">Phone</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="10-digit mobile number" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="phone"></p>
+            </div>
+            <div>
+              <label for="eventType" class="block text-sm font-semibold text-leaf-900">Event Type</label>
+              <select id="eventType" name="eventType" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500">
+                <option value="">Select event type</option>
+                <option>Birthday Party</option>
+                <option>Family Reunion</option>
+                <option>Anniversary / Celebration</option>
+                <option>Corporate Retreat</option>
+                <option>Other</option>
+              </select>
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="eventType"></p>
+            </div>
+            <div>
+              <label for="eventDate" class="block text-sm font-semibold text-leaf-900">Event Date</label>
+              <input id="eventDate" name="eventDate" type="date" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="eventDate"></p>
+            </div>
+            <div>
+              <label for="guests" class="block text-sm font-semibold text-leaf-900">Number of Guests</label>
+              <input id="guests" name="guests" type="number" min="1" max="200" inputmode="numeric" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="e.g. 25" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="guests"></p>
+            </div>
+            <div class="sm:col-span-2">
+              <label for="package" class="block text-sm font-semibold text-leaf-900">Package</label>
+              <select id="package" name="package" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500">
+                <option value="">Select a package</option>
+                <option>Day Event</option>
+                <option>Evening Party</option>
+                <option>Overnight Stay</option>
+              </select>
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="package"></p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label for="message" class="block text-sm font-semibold text-leaf-900">Additional Details <span class="font-normal text-leaf-700">(optional)</span></label>
+            <textarea id="message" name="message" rows="4" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="Catering needs, décor ideas, overnight stay requirements..."></textarea>
+          </div>
+
+          <button type="submit" class="mt-6 inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold hover:bg-leaf-700 transition">Submit Booking Request</button>
+          <p id="formSuccess" class="mt-4 text-sm font-semibold text-green-700 hidden" role="status"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-leaf-900 text-leaf-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between gap-3">
+      <p class="text-sm">&copy; <span id="year"></span> Aril Gardens. All rights reserved.</p>
+      <p class="text-sm text-leaf-200"><a href="index.html" class="hover:text-white underline">Back to main site</a> | Clubhouse &amp; Event Venue</p>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Lucide icons.
+    lucide.createIcons();
+
+    // Mobile menu toggle.
+    const menuButton = document.getElementById('menuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuButton.addEventListener('click', () => {
+      const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!expanded));
+      mobileMenu.classList.toggle('hidden');
+    });
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuButton.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Reveal elements as they scroll into view.
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => revealObserver.observe(el));
+
+    // Form elements.
+    const bookingForm = document.getElementById('bookingForm');
+    const formSuccess = document.getElementById('formSuccess');
+    const eventTypeSelect = document.getElementById('eventType');
+    const packageSelect = document.getElementById('package');
+    const eventDateInput = document.getElementById('eventDate');
+
+    // Block past dates (local date, not UTC).
+    const today = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    eventDateInput.min = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+
+    // Validation rules: return true when valid, otherwise an error message.
+    const validators = {
+      name: (v) => v.trim().length >= 2 || 'Please enter your name (min 2 characters).',
+      email: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || 'Please enter a valid email address.',
+      phone: (v) => /^\d{10}$/.test(v.trim()) || 'Please enter a valid 10-digit phone number.',
+      eventType: (v) => v.trim().length > 0 || 'Please select an event type.',
+      eventDate: (v) => (v !== '' && v >= eventDateInput.min) || 'Please choose a valid upcoming date.',
+      guests: (v) => {
+        const n = Number(v);
+        return (Number.isInteger(n) && n >= 1 && n <= 200) || 'Enter a guest count between 1 and 200.';
+      },
+      package: (v) => v.trim().length > 0 || 'Please select a package.'
+    };
+
+    function setError(field, message) {
+      const errorEl = document.querySelector(`[data-error-for="${field}"]`);
+      const inputEl = document.getElementById(field);
+      if (message) {
+        errorEl.textContent = message;
+        errorEl.classList.remove('hidden');
+        inputEl.classList.add('border-red-500');
+      } else {
+        errorEl.textContent = '';
+        errorEl.classList.add('hidden');
+        inputEl.classList.remove('border-red-500');
+      }
+    }
+
+    // Selectable event cards pre-fill the Event Type field.
+    function highlight(container, matcher) {
+      container.forEach((el) => el.classList.toggle('is-selected', matcher(el)));
+    }
+
+    const eventCards = document.querySelectorAll('#eventCards [data-event]');
+    eventCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        eventTypeSelect.value = card.dataset.event;
+        setError('eventType', '');
+        highlight(eventCards, (el) => el === card);
+        document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Selectable package cards pre-fill the Package field.
+    const packageCards = document.querySelectorAll('#packageCards [data-package]');
+    packageCards.forEach((card) => {
+      card.querySelector('.select-package').addEventListener('click', () => {
+        packageSelect.value = card.dataset.package;
+        setError('package', '');
+        highlight(packageCards, (el) => el === card);
+        document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // Keep card highlights in sync if the user changes the dropdowns manually.
+    eventTypeSelect.addEventListener('change', () => highlight(eventCards, (el) => el.dataset.event === eventTypeSelect.value));
+    packageSelect.addEventListener('change', () => highlight(packageCards, (el) => el.dataset.package === packageSelect.value));
+
+    // Validate on submit.
+    bookingForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      formSuccess.classList.add('hidden');
+
+      const data = new FormData(bookingForm);
+      let isValid = true;
+
+      Object.keys(validators).forEach((field) => {
+        const result = validators[field](String(data.get(field) || ''));
+        setError(field, result === true ? '' : result);
+        if (result !== true) isValid = false;
+      });
+
+      if (isValid) {
+        // Demo only: no backend is connected. Replace with a fetch() to your endpoint.
+        formSuccess.textContent = `Thank you, ${String(data.get('name')).trim()}! We received your request and will contact you shortly.`;
+        formSuccess.classList.remove('hidden');
+        bookingForm.reset();
+        highlight(eventCards, () => false);
+        highlight(packageCards, () => false);
+      } else {
+        const firstInvalid = bookingForm.querySelector('.border-red-500');
+        if (firstInvalid) firstInvalid.focus();
+      }
+    });
+
+    // Live validation on blur.
+    Object.keys(validators).forEach((field) => {
+      document.getElementById(field).addEventListener('blur', (e) => {
+        const result = validators[field](e.target.value);
+        setError(field, result === true ? '' : result);
+      });
+    });
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

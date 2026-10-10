@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aril Gardens - A 3-acre lush farm retreat with 14 premium farm plots and an event-ready clubhouse." />
+  <title>Aril Gardens | Farm Plots & Clubhouse Retreat</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            leaf: {
+              50: '#f4f9f3',
+              100: '#e7f3e4',
+              200: '#c7e5bf',
+              300: '#9ed390',
+              400: '#74bb63',
+              500: '#4d9d3f',
+              600: '#3a7a31',
+              700: '#2e5f29',
+              800: '#284c24',
+              900: '#233f21'
+            },
+            earth: {
+              50: '#fbf7ef',
+              100: '#f5edd9',
+              200: '#ebdab1',
+              300: '#e0c27f',
+              400: '#d2a451',
+              500: '#c48730',
+              600: '#a66b26',
+              700: '#85511f',
+              800: '#6b421f',
+              900: '#57371d'
+            }
+          },
+          fontFamily: {
+            heading: ['Poppins', 'ui-sans-serif', 'system-ui'],
+            body: ['Manrope', 'ui-sans-serif', 'system-ui']
+          },
+          boxShadow: {
+            soft: '0 10px 30px -15px rgba(29, 53, 36, 0.35)'
+          },
+          backgroundImage: {
+            'leaf-grid': 'radial-gradient(circle at 1px 1px, rgba(77,157,63,0.14) 1px, transparent 0)'
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: linear-gradient(180deg, #f4f9f3 0%, #fbf7ef 44%, #ffffff 100%);
+      color: #233f21;
+    }
+
+    .hero-overlay {
+      background: radial-gradient(1200px 500px at 10% 20%, rgba(77, 157, 63, 0.28), transparent 62%),
+                  radial-gradient(900px 400px at 90% 30%, rgba(196, 135, 48, 0.22), transparent 58%);
+    }
+
+    .glass-nav {
+      backdrop-filter: saturate(140%) blur(10px);
+      background: rgba(255, 255, 255, 0.84);
+    }
+
+    .plot-cell {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .plot-cell:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px -16px rgba(35, 63, 33, 0.6);
+      background-color: #dcf0d6;
+    }
+
+    .plot-cell.is-dimmed {
+      opacity: 0.33;
+      transform: scale(0.98);
+    }
+
+    .plot-cell.is-selected {
+      outline: 2px solid #c48730;
+      outline-offset: 2px;
+      box-shadow: 0 10px 28px -16px rgba(196, 135, 48, 0.8);
+      background-color: #fff7e8;
+    }
+
+    .plot-status-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 9999px;
+      display: inline-block;
+    }
+
+    .status-available { background-color: #3a7a31; }
+    .status-limited { background-color: #c48730; }
+    .status-sold { background-color: #b91c1c; }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .fade-up.delay-1 { animation-delay: 0.12s; }
+    .fade-up.delay-2 { animation-delay: 0.24s; }
+    .fade-up.delay-3 { animation-delay: 0.36s; }
+
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal-on-scroll.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-on-scroll[data-delay="1"] { transition-delay: 0.1s; }
+    .reveal-on-scroll[data-delay="2"] { transition-delay: 0.2s; }
+    .reveal-on-scroll[data-delay="3"] { transition-delay: 0.3s; }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="antialiased">
+  <!-- Sticky Navigation -->
+  <header class="fixed top-0 inset-x-0 z-50 border-b border-leaf-100/80 glass-nav">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main Navigation">
+      <div class="h-16 flex items-center justify-between">
+        <a href="#home" class="font-heading text-lg font-extrabold tracking-wide text-leaf-800">Aril Gardens</a>
+
+        <button id="menuButton" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-leaf-200 text-leaf-700" aria-label="Toggle mobile menu" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <ul class="hidden md:flex items-center gap-7 text-sm font-semibold text-leaf-800">
+          <li><a class="hover:text-earth-600 transition" href="#home">Home</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#farm-plots">Farm Plots</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#clubhouse">Clubhouse</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#layout">Layout</a></li>
+          <li><a class="hover:text-earth-600 transition" href="#contact">Contact Us</a></li>
+          <li><a class="px-4 py-2 rounded-lg bg-earth-500 text-white hover:bg-earth-600 transition" href="clubhouse.html">Book Clubhouse</a></li>
+        </ul>
+      </div>
+
+      <div id="mobileMenu" class="md:hidden hidden pb-4">
+        <ul class="space-y-1 text-sm font-semibold text-leaf-800">
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#home">Home</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#farm-plots">Farm Plots</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#clubhouse">Clubhouse</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#layout">Layout</a></li>
+          <li><a class="block px-3 py-2 rounded-lg hover:bg-leaf-100" href="#contact">Contact Us</a></li>
+          <li><a class="block px-3 py-2 rounded-lg bg-earth-500 text-white" href="clubhouse.html">Book Clubhouse</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-28 pb-20 overflow-hidden">
+      <div class="absolute inset-0 hero-overlay pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+          <div>
+            <span class="fade-up inline-flex items-center rounded-full bg-leaf-100 text-leaf-800 px-3 py-1 text-xs font-bold tracking-wide uppercase">
+              <i data-lucide="sprout" class="w-4 h-4 mr-2"></i>
+              Nature-Crafted Investment & Leisure
+            </span>
+            <h1 class="fade-up delay-1 mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-leaf-900">
+              Own Your <span class="text-earth-600">5,500 Sq. Ft.</span> Farm Plot at Aril Gardens
+            </h1>
+            <p class="fade-up delay-2 mt-5 text-base sm:text-lg text-leaf-800/90 max-w-xl">
+              A lush 3-acre farm retreat with just 14 premium plots and an event-ready clubhouse designed for intimate celebrations, weekend escapes, and long-term value.
+            </p>
+            <div class="fade-up delay-3 mt-7 flex flex-col sm:flex-row gap-3">
+              <a href="#farm-plots" class="inline-flex justify-center items-center px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold shadow-soft hover:bg-leaf-700 transition">Explore Farm Plots</a>
+              <a href="#contact" class="inline-flex justify-center items-center px-6 py-3 rounded-xl border border-earth-500 text-earth-700 bg-earth-50 font-semibold hover:bg-earth-100 transition">Book a Site Visit</a>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="bg-white/90 border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft">
+              <h2 class="font-heading text-xl font-bold text-leaf-900">Why Aril Gardens?</h2>
+              <div class="mt-5 space-y-4 text-sm sm:text-base">
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-leaf-100 flex items-center justify-center text-leaf-700"><i class="fa-solid fa-map-location-dot"></i></div>
+                  <p><strong>3 Acres of Green Serenity</strong> thoughtfully divided for privacy and comfort.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-earth-100 flex items-center justify-center text-earth-700"><i class="fa-solid fa-ruler-combined"></i></div>
+                  <p><strong>14 Premium Plots</strong> of 5,500 sq. ft. each for lifestyle and appreciation.</p>
+                </div>
+                <div class="flex items-start gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-leaf-100 flex items-center justify-center text-leaf-700"><i class="fa-solid fa-champagne-glasses"></i></div>
+                  <p><strong>Clubhouse Venue</strong> for private parties, family events, and weekend stays.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature Showcase Grid -->
+    <section class="py-16" data-reveal-group>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">A Thoughtful Blend of Nature & Comfort</h2>
+          <p class="mt-3 text-leaf-800/90">Built for families, investors, and hosts who value space, greenery, and quality amenities.</p>
+        </div>
+
+        <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <article class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i data-lucide="maximize"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">5,500 sq. ft. Plots</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Generous individual farm plot sizes, ideal for personal retreats or future-ready land investment.</p>
+          </article>
+
+          <article class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-tree"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">3-Acre Estate</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">An expansive green retreat designed for open skies, healthy living, and peaceful weekend experiences.</p>
+          </article>
+
+          <article class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-house-chimney-window"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Clubhouse Ready</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A complete venue with luxury rooms, pool access, lawn space, and support for memorable gatherings.</p>
+          </article>
+
+          <article class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i data-lucide="shield-check"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Premium Community</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Limited inventory of 14 plots ensures an exclusive and low-density ownership environment.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Farm Plots Section -->
+    <section id="farm-plots" class="py-16 bg-leaf-50/60" data-reveal-group>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-10 items-start">
+          <div class="reveal-on-scroll">
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Farm Plots for Purchase</h2>
+            <p class="mt-3 text-leaf-800/90">Each plot at Aril Gardens spans 5,500 sq. ft., balancing privacy, accessibility, and long-term utility.</p>
+
+            <div class="mt-7 grid sm:grid-cols-2 gap-4">
+              <div class="bg-white border border-leaf-100 rounded-2xl p-4">
+                <p class="text-xs font-bold uppercase tracking-wide text-earth-700">Plot Size</p>
+                <p class="mt-2 font-heading text-2xl font-bold text-leaf-900">5,500 sq. ft.</p>
+              </div>
+              <div class="bg-white border border-leaf-100 rounded-2xl p-4">
+                <p class="text-xs font-bold uppercase tracking-wide text-earth-700">Total Plots</p>
+                <p class="mt-2 font-heading text-2xl font-bold text-leaf-900">14 Premium Plots</p>
+              </div>
+              <div class="bg-white border border-leaf-100 rounded-2xl p-4 sm:col-span-2">
+                <p class="text-xs font-bold uppercase tracking-wide text-earth-700">Ideal For</p>
+                <p class="mt-2 text-sm text-leaf-800">Weekend farm homes, lifestyle investment, eco-living spaces, and family-owned private greenery.</p>
+              </div>
+            </div>
+
+            <button id="openInquiryModal" class="mt-7 inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-earth-500 text-white font-semibold hover:bg-earth-600 transition shadow-soft">
+              <i class="fa-solid fa-envelope-open-text"></i>
+              Inquire About Plot Availability
+            </button>
+          </div>
+
+          <div class="bg-white border border-leaf-100 rounded-3xl p-6 shadow-soft reveal-on-scroll" data-delay="1">
+            <h3 class="font-heading text-xl font-bold text-leaf-900">Ownership Highlights</h3>
+            <ul class="mt-5 space-y-3 text-sm text-leaf-800/95">
+              <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Limited-release inventory of 14 plots for an exclusive community feel.</li>
+              <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Spacious dimensions suitable for farming, leisure, and flexible site planning.</li>
+              <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Proximity to a premium clubhouse for events and guest comfort.</li>
+              <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Designed for both emotional lifestyle value and long-term asset potential.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Clubhouse Section -->
+    <section id="clubhouse" class="py-16" data-reveal-group>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Clubhouse & Event Venue</h2>
+          <p class="mt-3 text-leaf-800/90">Host private celebrations in a peaceful natural setting with thoughtfully curated amenities.</p>
+        </div>
+
+        <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft lg:col-span-2 reveal-on-scroll" data-delay="1">
+            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-bed"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">4 Luxury Rooms</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Comfortable premium rooms for overnight stays and guest relaxation.</p>
+          </div>
+
+          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i data-lucide="waves"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Swimming Pool</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A refreshing pool area suited for leisure and social gatherings.</p>
+          </div>
+
+          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-fire-burner"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Barbecue Station</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">Dedicated BBQ setup for intimate celebrations and family evenings.</p>
+          </div>
+
+          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft lg:col-span-2 reveal-on-scroll" data-delay="1">
+            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-people-group"></i></div>
+            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Party Lawn & Ambiance</h3>
+            <p class="mt-2 text-sm text-leaf-800/90">A serene lawn with open-air charm for birthdays, reunions, and private celebrations.</p>
+          </div>
+        </div>
+
+        <div class="mt-8 text-center">
+          <a href="clubhouse.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-earth-500 text-white font-semibold hover:bg-earth-600 transition shadow-soft">
+            <i class="fa-solid fa-calendar-check"></i>
+            Book the Clubhouse for Your Event
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Layout / Plot Map Section -->
+    <section id="layout" class="py-16 bg-earth-50/60" data-reveal-group>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div>
+            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Master Plan Preview</h2>
+            <p class="mt-2 text-leaf-800/90">Interactive concept map showing Plots 1 to 14 and the Clubhouse zone.</p>
+          </div>
+          <p class="text-sm text-earth-700 font-semibold">Tip: Filter by status and hover each plot to inspect numbering.</p>
+        </div>
+
+        <div class="mt-5 flex flex-wrap items-center gap-2" role="group" aria-label="Filter plots by availability">
+          <button class="plot-filter-btn px-3 py-1.5 rounded-full bg-leaf-700 text-white text-xs font-bold" data-filter="all">All Plots</button>
+          <button class="plot-filter-btn px-3 py-1.5 rounded-full bg-white border border-leaf-200 text-leaf-800 text-xs font-bold" data-filter="available">Available</button>
+          <button class="plot-filter-btn px-3 py-1.5 rounded-full bg-white border border-leaf-200 text-leaf-800 text-xs font-bold" data-filter="limited">Limited</button>
+          <button class="plot-filter-btn px-3 py-1.5 rounded-full bg-white border border-leaf-200 text-leaf-800 text-xs font-bold" data-filter="sold">Sold</button>
+        </div>
+
+        <div id="plotStatusCounts" class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+
+        <p id="selectedPlotHint" class="mt-3 hidden rounded-xl border border-earth-300 bg-earth-100 px-3 py-2 text-xs sm:text-sm font-semibold text-earth-800"></p>
+
+        <div class="mt-8 bg-white border border-leaf-100 rounded-3xl p-5 sm:p-8 shadow-soft reveal-on-scroll" data-delay="1">
+          <!-- Simple visual representation of 14 plots + clubhouse -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="1" data-plot-status="available"><p class="text-sm">Plot 1</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="2" data-plot-status="available"><p class="text-sm">Plot 2</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="3" data-plot-status="limited"><p class="text-sm">Plot 3</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-limited"></span>Limited</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="4" data-plot-status="available"><p class="text-sm">Plot 4</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="5" data-plot-status="sold"><p class="text-sm">Plot 5</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-sold"></span>Sold</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="6" data-plot-status="limited"><p class="text-sm">Plot 6</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-limited"></span>Limited</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="7" data-plot-status="available"><p class="text-sm">Plot 7</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="8" data-plot-status="available"><p class="text-sm">Plot 8</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="9" data-plot-status="sold"><p class="text-sm">Plot 9</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-sold"></span>Sold</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="10" data-plot-status="limited"><p class="text-sm">Plot 10</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-limited"></span>Limited</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="11" data-plot-status="available"><p class="text-sm">Plot 11</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="12" data-plot-status="limited"><p class="text-sm">Plot 12</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-limited"></span>Limited</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="13" data-plot-status="available"><p class="text-sm">Plot 13</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+            <button type="button" class="plot-cell h-16 rounded-xl border border-leaf-200 bg-leaf-100 p-2 font-bold text-leaf-800 text-left cursor-pointer" data-plot-id="14" data-plot-status="available"><p class="text-sm">Plot 14</p><p class="text-[10px] mt-1 inline-flex items-center gap-1"><span class="plot-status-dot status-available"></span>Available</p></button>
+          </div>
+
+          <div class="mt-4 h-20 rounded-2xl border-2 border-dashed border-earth-400 bg-earth-100 flex items-center justify-center">
+            <p class="font-heading text-earth-800 font-bold tracking-wide">Clubhouse & Event Zone</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / Booking Form -->
+    <section id="contact" class="py-16" data-reveal-group>
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Contact & Booking Inquiry</h2>
+          <p class="mt-3 text-leaf-800/90">Share your requirements for plot purchase or clubhouse bookings. Our team will respond promptly.</p>
+        </div>
+
+        <form id="contactForm" class="mt-10 bg-white border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft reveal-on-scroll" data-delay="1" novalidate>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="name" class="block text-sm font-semibold text-leaf-900">Name</label>
+              <input id="name" name="name" type="text" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="Your full name" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="name"></p>
+            </div>
+            <div>
+              <label for="email" class="block text-sm font-semibold text-leaf-900">Email</label>
+              <input id="email" name="email" type="email" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="you@example.com" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="email"></p>
+            </div>
+            <div>
+              <label for="phone" class="block text-sm font-semibold text-leaf-900">Phone</label>
+              <input id="phone" name="phone" type="tel" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="10-digit mobile number" />
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="phone"></p>
+            </div>
+            <div>
+              <label for="interest" class="block text-sm font-semibold text-leaf-900">Interest Type</label>
+              <select id="interest" name="interest" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500">
+                <option value="">Select an option</option>
+                <option value="farm-plot">Farm Plot Purchase</option>
+                <option value="clubhouse">Clubhouse Rental</option>
+                <option value="both">Both</option>
+              </select>
+              <p class="text-xs text-red-600 mt-1 hidden" data-error-for="interest"></p>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label for="message" class="block text-sm font-semibold text-leaf-900">Message</label>
+            <textarea id="message" name="message" rows="4" class="mt-1 w-full rounded-xl border-leaf-200 focus:border-leaf-500 focus:ring-leaf-500" placeholder="Tell us your preferred timeline, group size, or any special requirements"></textarea>
+            <p class="text-xs text-red-600 mt-1 hidden" data-error-for="message"></p>
+          </div>
+
+          <button type="submit" class="mt-6 inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold hover:bg-leaf-700 transition">Submit Inquiry</button>
+          <p id="formSuccess" class="mt-4 text-sm font-semibold text-green-700 hidden">Thank you! Your inquiry has been submitted successfully.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-leaf-900 text-leaf-50 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between gap-3">
+      <p class="text-sm">© <span id="year"></span> Aril Gardens. All rights reserved.</p>
+      <p class="text-sm text-leaf-200">3-Acre Farm Retreat | 14 Premium Plots | Clubhouse & Event Venue</p>
+    </div>
+  </footer>
+
+  <!-- Inquiry Modal -->
+  <div id="inquiryModal" class="fixed inset-0 z-[60] hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="inquiryModalTitle">
+    <div class="absolute inset-0 bg-leaf-900/55"></div>
+    <div class="relative min-h-screen flex items-center justify-center p-4">
+      <div class="w-full max-w-md bg-white rounded-2xl border border-leaf-100 shadow-soft p-6">
+        <div class="flex items-start justify-between gap-3">
+          <h3 id="inquiryModalTitle" class="font-heading text-xl font-bold text-leaf-900">Plot Inquiry</h3>
+          <button id="closeInquiryModal" class="w-9 h-9 rounded-lg border border-leaf-200 text-leaf-700" aria-label="Close inquiry modal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <p class="mt-3 text-sm text-leaf-800/90">Interested in a 5,500 sq. ft. plot? Share your contact details through the form below and our team will connect with availability and pricing.</p>
+
+        <div class="mt-5 flex gap-3">
+          <a href="#contact" id="jumpToForm" class="flex-1 inline-flex justify-center items-center px-4 py-2.5 rounded-xl bg-leaf-600 text-white font-semibold hover:bg-leaf-700 transition">Go to Contact Form</a>
+          <button id="closeInquiryModalAlt" class="px-4 py-2.5 rounded-xl border border-leaf-200 text-leaf-800 font-semibold hover:bg-leaf-50 transition">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons.
+    lucide.createIcons();
+
+    // Mobile menu toggle.
+    const menuButton = document.getElementById('menuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuButton.addEventListener('click', () => {
+      const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!expanded));
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Close mobile menu when any link is clicked.
+    mobileMenu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        menuButton.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Inquiry modal controls.
+    const inquiryModal = document.getElementById('inquiryModal');
+    const openInquiryModal = document.getElementById('openInquiryModal');
+    const closeInquiryModal = document.getElementById('closeInquiryModal');
+    const closeInquiryModalAlt = document.getElementById('closeInquiryModalAlt');
+    const jumpToForm = document.getElementById('jumpToForm');
+
+    const openModal = () => {
+      inquiryModal.classList.remove('hidden');
+      inquiryModal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('overflow-hidden');
+    };
+
+    const closeModal = () => {
+      inquiryModal.classList.add('hidden');
+      inquiryModal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('overflow-hidden');
+    };
+
+    openInquiryModal.addEventListener('click', openModal);
+    closeInquiryModal.addEventListener('click', closeModal);
+    closeInquiryModalAlt.addEventListener('click', closeModal);
+    jumpToForm.addEventListener('click', closeModal);
+    inquiryModal.addEventListener('click', (event) => {
+      if (event.target === inquiryModal || event.target === inquiryModal.firstElementChild) {
+        closeModal();
+      }
+    });
+
+    // Reveal sections and cards as they scroll into view.
+    const revealItems = document.querySelectorAll('.reveal-on-scroll');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+
+    // Lightweight plot availability filtering + live counters.
+    const plotFilterButtons = document.querySelectorAll('.plot-filter-btn');
+    const plotCells = document.querySelectorAll('[data-plot-status]');
+    const plotStatusCounts = document.getElementById('plotStatusCounts');
+    const selectedPlotHint = document.getElementById('selectedPlotHint');
+
+    function computePlotCounts() {
+      return Array.from(plotCells).reduce((acc, cell) => {
+        const status = cell.getAttribute('data-plot-status');
+        acc[status] = (acc[status] || 0) + 1;
+        acc.all += 1;
+        return acc;
+      }, { all: 0, available: 0, limited: 0, sold: 0 });
+    }
+
+    function renderPlotCounts() {
+      const counts = computePlotCounts();
+      plotStatusCounts.innerHTML = `
+        <div class="rounded-xl border border-leaf-200 bg-white px-3 py-2 text-xs font-semibold text-leaf-800">Total: <span class="font-extrabold">${counts.all}</span></div>
+        <div class="rounded-xl border border-leaf-200 bg-white px-3 py-2 text-xs font-semibold text-leaf-800"><span class="plot-status-dot status-available mr-1"></span>Available: <span class="font-extrabold">${counts.available}</span></div>
+        <div class="rounded-xl border border-leaf-200 bg-white px-3 py-2 text-xs font-semibold text-leaf-800"><span class="plot-status-dot status-limited mr-1"></span>Limited: <span class="font-extrabold">${counts.limited}</span></div>
+        <div class="rounded-xl border border-leaf-200 bg-white px-3 py-2 text-xs font-semibold text-leaf-800"><span class="plot-status-dot status-sold mr-1"></span>Sold: <span class="font-extrabold">${counts.sold}</span></div>
+      `;
+    }
+
+    function applyPlotFilter(filterValue) {
+      plotCells.forEach((cell) => {
+        const status = cell.getAttribute('data-plot-status');
+        const shouldDim = filterValue !== 'all' && status !== filterValue;
+        cell.classList.toggle('is-dimmed', shouldDim);
+      });
+    }
+
+    function setSelectedPlot(cell) {
+      plotCells.forEach((candidate) => candidate.classList.remove('is-selected'));
+      cell.classList.add('is-selected');
+
+      const plotId = cell.getAttribute('data-plot-id');
+      const status = cell.getAttribute('data-plot-status');
+      const statusText = status.charAt(0).toUpperCase() + status.slice(1);
+
+      selectedPlotHint.textContent = `Selected Plot ${plotId} (${statusText}). We'll include this in your inquiry.`;
+      selectedPlotHint.classList.remove('hidden');
+
+      const interestInput = document.getElementById('interest');
+      const messageInput = document.getElementById('message');
+      interestInput.value = 'farm-plot';
+
+      const inquiryLine = `Interested in Plot ${plotId} (status: ${statusText}).`;
+      if (!messageInput.value.trim()) {
+        messageInput.value = inquiryLine;
+      } else if (!messageInput.value.includes(`Plot ${plotId}`)) {
+        messageInput.value = `${messageInput.value.trim()} ${inquiryLine}`;
+      }
+
+      setError('interest', '');
+      setError('message', '');
+    }
+
+    plotFilterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const selected = btn.getAttribute('data-filter');
+        applyPlotFilter(selected);
+
+        plotFilterButtons.forEach((candidate) => {
+          candidate.classList.remove('bg-leaf-700', 'text-white');
+          candidate.classList.add('bg-white', 'border', 'border-leaf-200', 'text-leaf-800');
+        });
+
+        btn.classList.remove('bg-white', 'border', 'border-leaf-200', 'text-leaf-800');
+        btn.classList.add('bg-leaf-700', 'text-white');
+      });
+    });
+
+    plotCells.forEach((cell) => {
+      cell.addEventListener('click', () => {
+        setSelectedPlot(cell);
+      });
+    });
+
+    renderPlotCounts();
+
+    // Form validation helpers.
+    const contactForm = document.getElementById('contactForm');
+    const formSuccess = document.getElementById('formSuccess');
+
+    const validators = {
+      name: (value) => value.trim().length >= 2 || 'Please enter your name (min 2 characters).',
+      email: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Please enter a valid email address.',
+      phone: (value) => /^\d{10}$/.test(value.trim()) || 'Please enter a valid 10-digit phone number.',
+      interest: (value) => value.trim().length > 0 || 'Please select your interest type.',
+      message: (value) => value.trim().length >= 10 || 'Please enter at least 10 characters in your message.'
+    };
+
+    function setError(field, message) {
+      const errorEl = document.querySelector(`[data-error-for="${field}"]`);
+      const inputEl = document.getElementById(field);
+      if (message) {
+        errorEl.textContent = message;
+        errorEl.classList.remove('hidden');
+        inputEl.classList.add('border-red-500');
+      } else {
+        errorEl.textContent = '';
+        errorEl.classList.add('hidden');
+        inputEl.classList.remove('border-red-500');
+      }
+    }
+
+    // Validate on submit and show success feedback only when all inputs pass.
+    contactForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      formSuccess.classList.add('hidden');
+
+      const formData = new FormData(contactForm);
+      let isValid = true;
+
+      Object.keys(validators).forEach((field) => {
+        const value = String(formData.get(field) || '');
+        const result = validators[field](value);
+
+        if (result !== true) {
+          setError(field, result);
+          isValid = false;
+        } else {
+          setError(field, '');
+        }
+      });
+
+      if (isValid) {
+        formSuccess.classList.remove('hidden');
+        contactForm.reset();
+      }
+    });
+
+    // Live validation on blur for better UX.
+    Object.keys(validators).forEach((field) => {
+      const input = document.getElementById(field);
+      input.addEventListener('blur', () => {
+        const result = validators[field](input.value);
+        setError(field, result === true ? '' : result);
+      });
+    });
+
+    // Current year in footer.
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
