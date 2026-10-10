@@ -20,6 +20,10 @@ jobs:
     env:
       # Reads the key from a repository secret, falling back to a repository variable.
       WEB3FORMS_ACCESS_KEY: ${{ secrets.WEB3FORMS_ACCESS_KEY || vars.WEB3FORMS_ACCESS_KEY }}
+      # Public contact details shown on the site. Defaults are set here so no secret changes are needed;
+      # override by defining repository variables CONTACT_PHONE / CONTACT_EMAIL.
+      CONTACT_PHONE: ${{ vars.CONTACT_PHONE || '+916362845032' }}
+      CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL || 'garden@arilventures.com' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,13 +35,19 @@ jobs:
             exit 1
           fi
 
-      - name: Build site with injected access key
+      - name: Build site with injected values
         run: |
           mkdir -p dist
           cp index.html clubhouse.html dist/
-          sed -i "s|__WEB3FORMS_ACCESS_KEY__|${WEB3FORMS_ACCESS_KEY}|g" dist/*.html
-          if grep -q "__WEB3FORMS_ACCESS_KEY__" dist/*.html; then
-            echo "::error::Access key placeholder was not replaced."
+          CONTACT_PHONE_DIGITS="${CONTACT_PHONE//[^0-9]/}"
+          sed -i \
+            -e "s|__WEB3FORMS_ACCESS_KEY__|${WEB3FORMS_ACCESS_KEY}|g" \
+            -e "s|__CONTACT_PHONE_DIGITS__|${CONTACT_PHONE_DIGITS}|g" \
+            -e "s|__CONTACT_PHONE__|${CONTACT_PHONE}|g" \
+            -e "s|__CONTACT_EMAIL__|${CONTACT_EMAIL}|g" \
+            dist/*.html
+          if grep -qE "__(WEB3FORMS_ACCESS_KEY|CONTACT_PHONE|CONTACT_PHONE_DIGITS|CONTACT_EMAIL)__" dist/*.html; then
+            echo "::error::A build placeholder was not replaced."
             exit 1
           fi
 

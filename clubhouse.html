@@ -391,6 +391,13 @@
           <button type="submit" class="mt-6 inline-flex items-center justify-center w-full sm:w-auto px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold hover:bg-leaf-700 transition">Submit Booking Request</button>
           <p id="formSuccess" class="mt-4 text-sm font-semibold text-green-700 hidden" role="status"></p>
         </form>
+
+        <!-- Direct contact options (values injected at deploy time) -->
+        <div class="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 text-sm font-semibold">
+          <a href="tel:__CONTACT_PHONE__" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-leaf-200 bg-white text-leaf-800 hover:bg-leaf-50 transition"><i class="fa-solid fa-phone"></i> __CONTACT_PHONE__</a>
+          <a href="https://wa.me/__CONTACT_PHONE_DIGITS__" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-leaf-200 bg-white text-leaf-800 hover:bg-leaf-50 transition"><i class="fa-brands fa-whatsapp"></i> WhatsApp us</a>
+          <a href="mailto:__CONTACT_EMAIL__" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-leaf-200 bg-white text-leaf-800 hover:bg-leaf-50 transition"><i class="fa-solid fa-envelope"></i> __CONTACT_EMAIL__</a>
+        </div>
       </div>
     </section>
   </main>
@@ -400,6 +407,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between gap-3">
       <p class="text-sm">&copy; <span id="year"></span> Aril Gardens. All rights reserved.</p>
       <p class="text-sm text-leaf-200"><a href="index.html" class="hover:text-white underline">Back to main site</a> | Clubhouse &amp; Event Venue</p>
+      <p class="text-sm text-leaf-200"><a href="tel:__CONTACT_PHONE__" class="hover:text-white underline">__CONTACT_PHONE__</a> | <a href="mailto:__CONTACT_EMAIL__" class="hover:text-white underline">__CONTACT_EMAIL__</a></p>
     </div>
   </footer>
 
