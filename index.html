@@ -68,13 +68,35 @@
   <style>
     body {
       font-family: 'Manrope', sans-serif;
-      background: linear-gradient(180deg, #f4f9f3 0%, #fbf7ef 44%, #ffffff 100%);
+      background: #ffffff;
       color: #233f21;
     }
 
+    /* Dark green gradient over the hero photo keeps white text readable */
     .hero-overlay {
-      background: radial-gradient(1200px 500px at 10% 20%, rgba(77, 157, 63, 0.28), transparent 62%),
-                  radial-gradient(900px 400px at 90% 30%, rgba(196, 135, 48, 0.22), transparent 58%);
+      background:
+        linear-gradient(90deg, rgba(20, 45, 22, 0.88) 0%, rgba(20, 45, 22, 0.62) 50%, rgba(20, 45, 22, 0.25) 100%),
+        linear-gradient(0deg, rgba(20, 45, 22, 0.55) 0%, transparent 45%);
+    }
+
+    /* Small uppercase label above section headings */
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a66b26;
+    }
+
+    /* Gentle zoom on photo cards */
+    .img-zoom img { transition: transform 0.6s ease; }
+    .img-zoom:hover img { transform: scale(1.06); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .img-zoom img { transition: none; }
+      .img-zoom:hover img { transform: none; }
+      .fade-up, .reveal-on-scroll { animation: none; opacity: 1; transform: none; transition: none; }
     }
 
     .glass-nav {
@@ -153,7 +175,10 @@
   <header class="fixed top-0 inset-x-0 z-50 border-b border-leaf-100/80 glass-nav">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main Navigation">
       <div class="h-16 flex items-center justify-between">
-        <a href="#home" class="font-heading text-lg font-extrabold tracking-wide text-leaf-800">Aril Gardens</a>
+        <a href="#home" class="inline-flex items-center gap-2 font-heading text-lg font-extrabold tracking-wide text-leaf-800">
+          <span class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-leaf-600 text-white text-sm"><i class="fa-solid fa-leaf"></i></span>
+          Aril Gardens
+        </a>
 
         <button id="menuButton" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-leaf-200 text-leaf-700" aria-label="Toggle mobile menu" aria-expanded="false">
           <i class="fa-solid fa-bars"></i>
@@ -184,55 +209,48 @@
 
   <main>
     <!-- Hero Section -->
-    <section id="home" class="relative pt-28 pb-20 overflow-hidden">
+    <section id="home" class="relative min-h-[85vh] flex items-center pt-28 pb-32 overflow-hidden bg-leaf-900">
+      <!-- Background photo (Unsplash) -->
+      <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=2000&q=75"
+           alt="Golden farmland glowing at sunset" class="absolute inset-0 w-full h-full object-cover" fetchpriority="high" />
       <div class="absolute inset-0 hero-overlay pointer-events-none"></div>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <span class="fade-up inline-flex items-center rounded-full bg-leaf-100 text-leaf-800 px-3 py-1 text-xs font-bold tracking-wide uppercase">
-              <i data-lucide="sprout" class="w-4 h-4 mr-2"></i>
-              Nature-Crafted Investment & Leisure
-            </span>
-            <h1 class="fade-up delay-1 mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-leaf-900">
-              Own Your <span class="text-earth-600">5,500 Sq. Ft.</span> Farm Plot at Aril Gardens
-            </h1>
-            <p class="fade-up delay-2 mt-5 text-base sm:text-lg text-leaf-800/90 max-w-xl">
-              A lush 3-acre farm retreat with just 14 premium plots and an event-ready clubhouse designed for intimate celebrations, weekend escapes, and long-term value.
-            </p>
-            <div class="fade-up delay-3 mt-7 flex flex-col sm:flex-row gap-3">
-              <a href="#farm-plots" class="inline-flex justify-center items-center px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold shadow-soft hover:bg-leaf-700 transition">Explore Farm Plots</a>
-              <a href="#contact" class="inline-flex justify-center items-center px-6 py-3 rounded-xl border border-earth-500 text-earth-700 bg-earth-50 font-semibold hover:bg-earth-100 transition">Book a Site Visit</a>
-            </div>
-          </div>
 
-          <div class="relative">
-            <div class="bg-white/90 border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft">
-              <h2 class="font-heading text-xl font-bold text-leaf-900">Why Aril Gardens?</h2>
-              <div class="mt-5 space-y-4 text-sm sm:text-base">
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-leaf-100 flex items-center justify-center text-leaf-700"><i class="fa-solid fa-map-location-dot"></i></div>
-                  <p><strong>3 Acres of Green Serenity</strong> thoughtfully divided for privacy and comfort.</p>
-                </div>
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-earth-100 flex items-center justify-center text-earth-700"><i class="fa-solid fa-ruler-combined"></i></div>
-                  <p><strong>14 Premium Plots</strong> of 5,500 sq. ft. each for lifestyle and appreciation.</p>
-                </div>
-                <div class="flex items-start gap-3">
-                  <div class="w-10 h-10 rounded-xl bg-leaf-100 flex items-center justify-center text-leaf-700"><i class="fa-solid fa-champagne-glasses"></i></div>
-                  <p><strong>Clubhouse Venue</strong> for private parties, family events, and weekend stays.</p>
-                </div>
-              </div>
-            </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full">
+        <div class="max-w-3xl">
+          <span class="fade-up inline-flex items-center rounded-full bg-white/15 border border-white/25 text-white px-3 py-1 text-xs font-bold tracking-wide uppercase backdrop-blur">
+            <i data-lucide="sprout" class="w-4 h-4 mr-2"></i>
+            Farm Plots &amp; Private Clubhouse
+          </span>
+          <h1 class="fade-up delay-1 mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
+            Own Your <span class="text-earth-300">5,500 Sq. Ft.</span> Farm Plot at Aril Gardens
+          </h1>
+          <p class="fade-up delay-2 mt-5 text-base sm:text-lg text-white/85 max-w-xl">
+            A lush 3-acre farm retreat with just 14 premium plots and an event-ready clubhouse, designed for intimate celebrations, weekend escapes and long-term value.
+          </p>
+          <div class="fade-up delay-3 mt-8 flex flex-col sm:flex-row gap-3">
+            <a href="#farm-plots" class="inline-flex justify-center items-center px-7 py-3.5 rounded-xl bg-earth-500 text-white font-semibold shadow-soft hover:bg-earth-600 transition">Explore Farm Plots</a>
+            <a href="#contact" class="inline-flex justify-center items-center px-7 py-3.5 rounded-xl border border-white/50 bg-white/10 text-white font-semibold backdrop-blur hover:bg-white/20 transition">Book a Site Visit</a>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Key facts strip overlapping the hero -->
+    <section class="relative z-10 -mt-14 px-4 sm:px-6 lg:px-8" aria-label="Key facts">
+      <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-px bg-leaf-100 rounded-2xl overflow-hidden shadow-soft border border-leaf-100">
+        <div class="bg-white p-5 text-center"><p class="font-heading text-3xl font-extrabold text-leaf-700">3</p><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Acre Retreat</p></div>
+        <div class="bg-white p-5 text-center"><p class="font-heading text-3xl font-extrabold text-leaf-700">14</p><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Premium Plots</p></div>
+        <div class="bg-white p-5 text-center"><p class="font-heading text-3xl font-extrabold text-earth-600">5,500</p><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Sq. Ft. Per Plot</p></div>
+        <div class="bg-white p-5 text-center"><p class="font-heading text-3xl font-extrabold text-earth-600">4</p><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Luxury Clubhouse Rooms</p></div>
+      </div>
+    </section>
+
     <!-- Feature Showcase Grid -->
-    <section class="py-16" data-reveal-group>
+    <section class="py-20" data-reveal-group>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">A Thoughtful Blend of Nature & Comfort</h2>
+          <p class="eyebrow">The Estate</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">A Thoughtful Blend of Nature & Comfort</h2>
           <p class="mt-3 text-leaf-800/90">Built for families, investors, and hosts who value space, greenery, and quality amenities.</p>
         </div>
 
@@ -265,11 +283,12 @@
     </section>
 
     <!-- Farm Plots Section -->
-    <section id="farm-plots" class="py-16 bg-leaf-50/60" data-reveal-group>
+    <section id="farm-plots" class="py-20 bg-leaf-50/70" data-reveal-group>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-10 items-start">
+        <div class="grid lg:grid-cols-2 gap-12 items-start">
           <div class="reveal-on-scroll">
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Farm Plots for Purchase</h2>
+            <p class="eyebrow">Farm Plots</p>
+            <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Farm Plots for Purchase</h2>
             <p class="mt-3 text-leaf-800/90">Each plot at Aril Gardens spans 5,500 sq. ft., balancing privacy, accessibility, and long-term utility.</p>
 
             <div class="mt-7 grid sm:grid-cols-2 gap-4">
@@ -293,7 +312,14 @@
             </button>
           </div>
 
-          <div class="bg-white border border-leaf-100 rounded-3xl p-6 shadow-soft reveal-on-scroll" data-delay="1">
+          <div class="bg-white border border-leaf-100 rounded-3xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="img-zoom relative h-56 sm:h-64 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&w=1200&q=75"
+                   alt="Neat rows of green crops on a farm under a bright sky" loading="lazy" class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-gradient-to-t from-leaf-900/70 to-transparent"></div>
+              <p class="absolute bottom-4 left-5 right-5 font-heading text-lg font-bold text-white">14 plots across 3 acres of open green land</p>
+            </div>
+            <div class="p-6">
             <h3 class="font-heading text-xl font-bold text-leaf-900">Ownership Highlights</h3>
             <ul class="mt-5 space-y-3 text-sm text-leaf-800/95">
               <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Limited-release inventory of 14 plots for an exclusive community feel.</li>
@@ -301,43 +327,65 @@
               <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Proximity to a premium clubhouse for events and guest comfort.</li>
               <li class="flex gap-3"><i class="fa-solid fa-circle-check text-leaf-600 mt-0.5"></i> Designed for both emotional lifestyle value and long-term asset potential.</li>
             </ul>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Clubhouse Section -->
-    <section id="clubhouse" class="py-16" data-reveal-group>
+    <section id="clubhouse" class="py-20" data-reveal-group>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Clubhouse & Event Venue</h2>
+          <p class="eyebrow">Clubhouse</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Clubhouse & Event Venue</h2>
           <p class="mt-3 text-leaf-800/90">Host private celebrations in a peaceful natural setting with thoughtfully curated amenities.</p>
         </div>
 
-        <div class="mt-10 grid md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft lg:col-span-2 reveal-on-scroll" data-delay="1">
-            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-bed"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">4 Luxury Rooms</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">Comfortable premium rooms for overnight stays and guest relaxation.</p>
-          </div>
+        <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <article class="img-zoom bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="relative h-48 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?auto=format&fit=crop&w=800&q=75" alt="Bright, comfortable bedroom with a large bed" loading="lazy" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 inline-flex w-10 h-10 items-center justify-center rounded-xl bg-white/90 text-leaf-700 shadow"><i class="fa-solid fa-bed"></i></span>
+            </div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">4 Luxury Rooms</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">Comfortable premium rooms for overnight stays and guest relaxation.</p>
+            </div>
+          </article>
 
-          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="2">
-            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i data-lucide="waves"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Swimming Pool</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">A refreshing pool area suited for leisure and social gatherings.</p>
-          </div>
+          <article class="img-zoom bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="relative h-48 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=75" alt="Turquoise resort swimming pool surrounded by palms" loading="lazy" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 inline-flex w-10 h-10 items-center justify-center rounded-xl bg-white/90 text-earth-700 shadow"><i data-lucide="waves"></i></span>
+            </div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Swimming Pool</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">A refreshing pool area suited for leisure and social gatherings.</p>
+            </div>
+          </article>
 
-          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="3">
-            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-fire-burner"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Barbecue Station</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">Dedicated BBQ setup for intimate celebrations and family evenings.</p>
-          </div>
+          <article class="img-zoom bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="relative h-48 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=800&q=75" alt="Grilled skewers and vegetables from a barbecue" loading="lazy" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 inline-flex w-10 h-10 items-center justify-center rounded-xl bg-white/90 text-leaf-700 shadow"><i class="fa-solid fa-fire-burner"></i></span>
+            </div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Barbecue Station</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">Dedicated BBQ setup for intimate celebrations and family evenings.</p>
+            </div>
+          </article>
 
-          <div class="bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft lg:col-span-2 reveal-on-scroll" data-delay="1">
-            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-people-group"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Party Lawn & Ambiance</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">A serene lawn with open-air charm for birthdays, reunions, and private celebrations.</p>
-          </div>
+          <article class="img-zoom bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="relative h-48 overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1523301343968-6a6ebf63c672?auto=format&fit=crop&w=800&q=75" alt="Friends gathering beside a pool under string lights at sunset" loading="lazy" class="w-full h-full object-cover" />
+              <span class="absolute top-3 left-3 inline-flex w-10 h-10 items-center justify-center rounded-xl bg-white/90 text-earth-700 shadow"><i class="fa-solid fa-people-group"></i></span>
+            </div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Party Lawn & Ambiance</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">A serene lawn with open-air charm for birthdays, reunions, and private celebrations.</p>
+            </div>
+          </article>
         </div>
 
         <div class="mt-8 text-center">
@@ -350,11 +398,12 @@
     </section>
 
     <!-- Layout / Plot Map Section -->
-    <section id="layout" class="py-16 bg-earth-50/60" data-reveal-group>
+    <section id="layout" class="py-20 bg-earth-50/60" data-reveal-group>
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div>
-            <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Master Plan Preview</h2>
+            <p class="eyebrow">Layout</p>
+            <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Master Plan Preview</h2>
             <p class="mt-2 text-leaf-800/90">Interactive concept map showing Plots 1 to 14 and the Clubhouse zone.</p>
           </div>
           <p class="text-sm text-earth-700 font-semibold">Tip: Filter by status and hover each plot to inspect numbering.</p>
@@ -398,10 +447,11 @@
     </section>
 
     <!-- Contact / Booking Form -->
-    <section id="contact" class="py-16" data-reveal-group>
+    <section id="contact" class="py-20" data-reveal-group>
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Contact & Booking Inquiry</h2>
+          <p class="eyebrow">Contact Us</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Contact & Booking Inquiry</h2>
           <p class="mt-3 text-leaf-800/90">Share your requirements for plot purchase or clubhouse bookings. Our team will respond promptly.</p>
         </div>
 
@@ -457,11 +507,40 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-leaf-900 text-leaf-50 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between gap-3">
-      <p class="text-sm">© <span id="year"></span> Aril Gardens. All rights reserved.</p>
-      <p class="text-sm text-leaf-200">3-Acre Farm Retreat | 14 Premium Plots | Clubhouse & Event Venue</p>
-      <p class="text-sm text-leaf-200"><a href="tel:__CONTACT_PHONE__" class="hover:text-white underline">__CONTACT_PHONE__</a> | <a href="mailto:__CONTACT_EMAIL__" class="hover:text-white underline">__CONTACT_EMAIL__</a></p>
+  <footer class="bg-leaf-900 text-leaf-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 md:grid-cols-3">
+      <div>
+        <p class="inline-flex items-center gap-2 font-heading text-xl font-extrabold text-white">
+          <span class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-leaf-600 text-sm"><i class="fa-solid fa-leaf"></i></span>
+          Aril Gardens
+        </p>
+        <p class="mt-4 text-sm text-leaf-200 max-w-xs">A 3-acre farm retreat with 14 premium plots and an event-ready clubhouse.</p>
+      </div>
+
+      <div>
+        <p class="text-sm font-bold uppercase tracking-wide text-earth-300">Explore</p>
+        <ul class="mt-4 space-y-2 text-sm text-leaf-200">
+          <li><a href="#farm-plots" class="hover:text-white">Farm Plots</a></li>
+          <li><a href="#clubhouse" class="hover:text-white">Clubhouse</a></li>
+          <li><a href="clubhouse.html" class="hover:text-white">Book the Clubhouse</a></li>
+          <li><a href="#layout" class="hover:text-white">Master Plan</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-sm font-bold uppercase tracking-wide text-earth-300">Get in Touch</p>
+        <ul class="mt-4 space-y-2 text-sm text-leaf-200">
+          <li><i class="fa-solid fa-phone w-5"></i><a href="tel:__CONTACT_PHONE__" class="hover:text-white">__CONTACT_PHONE__</a></li>
+          <li><i class="fa-solid fa-envelope w-5"></i><a href="mailto:__CONTACT_EMAIL__" class="hover:text-white">__CONTACT_EMAIL__</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row justify-between gap-2 text-xs text-leaf-300">
+        <p>© <span id="year"></span> Aril Gardens. All rights reserved.</p>
+        <p>Photography via Unsplash</p>
+      </div>
     </div>
   </footer>
 

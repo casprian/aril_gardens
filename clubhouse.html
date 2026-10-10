@@ -49,13 +49,34 @@
   <style>
     body {
       font-family: 'Manrope', sans-serif;
-      background: linear-gradient(180deg, #f4f9f3 0%, #fbf7ef 44%, #ffffff 100%);
+      background: #ffffff;
       color: #233f21;
     }
 
+    /* Dark green gradient over the hero photo keeps white text readable */
     .hero-overlay {
-      background: radial-gradient(1200px 500px at 10% 20%, rgba(77, 157, 63, 0.28), transparent 62%),
-                  radial-gradient(900px 400px at 90% 30%, rgba(196, 135, 48, 0.22), transparent 58%);
+      background:
+        linear-gradient(90deg, rgba(20, 45, 22, 0.88) 0%, rgba(20, 45, 22, 0.62) 50%, rgba(20, 45, 22, 0.25) 100%),
+        linear-gradient(0deg, rgba(20, 45, 22, 0.55) 0%, transparent 45%);
+    }
+
+    /* Small uppercase label above section headings */
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #a66b26;
+    }
+
+    /* Gentle zoom on photo cards */
+    .img-zoom img { transition: transform 0.6s ease; }
+    .img-zoom:hover img { transform: scale(1.06); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .img-zoom img { transition: none; }
+      .img-zoom:hover img { transform: none; }
     }
 
     .glass-nav {
@@ -98,7 +119,10 @@
   <header class="fixed top-0 inset-x-0 z-50 border-b border-leaf-100/80 glass-nav">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main Navigation">
       <div class="h-16 flex items-center justify-between">
-        <a href="index.html" class="font-heading text-lg font-extrabold tracking-wide text-leaf-800">Aril Gardens</a>
+        <a href="index.html" class="inline-flex items-center gap-2 font-heading text-lg font-extrabold tracking-wide text-leaf-800">
+          <span class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-leaf-600 text-white text-sm"><i class="fa-solid fa-leaf"></i></span>
+          Aril Gardens
+        </a>
 
         <button id="menuButton" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-leaf-200 text-leaf-700" aria-label="Toggle mobile menu" aria-expanded="false">
           <i class="fa-solid fa-bars"></i>
@@ -129,91 +153,113 @@
 
   <main>
     <!-- Hero -->
-    <section class="relative pt-28 pb-20 overflow-hidden">
+    <section class="relative min-h-[85vh] flex items-center pt-28 pb-32 overflow-hidden bg-leaf-900">
+      <!-- Background photo (Unsplash) -->
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2000&q=75"
+           alt="Modern villa with a swimming pool under a clear blue sky" class="absolute inset-0 w-full h-full object-cover" fetchpriority="high" />
       <div class="absolute inset-0 hero-overlay pointer-events-none"></div>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div class="grid lg:grid-cols-2 gap-10 items-center">
-          <div>
-            <span class="inline-flex items-center rounded-full bg-earth-100 text-earth-800 px-3 py-1 text-xs font-bold tracking-wide uppercase">
-              <i data-lucide="party-popper" class="w-4 h-4 mr-2"></i>
-              Private Events in Nature
-            </span>
-            <h1 class="mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-leaf-900">
-              Celebrate Under Open Skies at the <span class="text-earth-600">Aril Gardens Clubhouse</span>
-            </h1>
-            <p class="mt-5 text-base sm:text-lg text-leaf-800/90 max-w-xl">
-              Four luxury rooms, a swimming pool, a party lawn and a barbecue station, all set within a peaceful 3-acre farm retreat. Perfect for small private parties and intimate gatherings.
-            </p>
-            <div class="mt-7 flex flex-col sm:flex-row gap-3">
-              <a href="#booking" class="inline-flex justify-center items-center px-6 py-3 rounded-xl bg-leaf-600 text-white font-semibold shadow-soft hover:bg-leaf-700 transition">Check Availability</a>
-              <a href="#events" class="inline-flex justify-center items-center px-6 py-3 rounded-xl border border-earth-500 text-earth-700 bg-earth-50 font-semibold hover:bg-earth-100 transition">Explore Event Ideas</a>
-            </div>
-          </div>
 
-          <!-- Quick facts card -->
-          <div class="bg-white/90 border border-leaf-100 rounded-3xl p-6 sm:p-8 shadow-soft">
-            <h2 class="font-heading text-xl font-bold text-leaf-900">At a Glance</h2>
-            <div class="mt-5 grid grid-cols-2 gap-4">
-              <div class="rounded-2xl bg-leaf-50 border border-leaf-100 p-4">
-                <p class="font-heading text-3xl font-extrabold text-leaf-700">4</p>
-                <p class="text-sm font-semibold text-leaf-800">Luxury Rooms</p>
-              </div>
-              <div class="rounded-2xl bg-earth-50 border border-earth-100 p-4">
-                <p class="font-heading text-3xl font-extrabold text-earth-600">3</p>
-                <p class="text-sm font-semibold text-leaf-800">Acre Retreat</p>
-              </div>
-              <div class="rounded-2xl bg-earth-50 border border-earth-100 p-4">
-                <i class="fa-solid fa-person-swimming text-2xl text-earth-600"></i>
-                <p class="mt-1 text-sm font-semibold text-leaf-800">Swimming Pool</p>
-              </div>
-              <div class="rounded-2xl bg-leaf-50 border border-leaf-100 p-4">
-                <i class="fa-solid fa-fire-burner text-2xl text-leaf-700"></i>
-                <p class="mt-1 text-sm font-semibold text-leaf-800">BBQ Station</p>
-              </div>
-            </div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative w-full">
+        <div class="max-w-3xl">
+          <span class="inline-flex items-center rounded-full bg-white/15 border border-white/25 text-white px-3 py-1 text-xs font-bold tracking-wide uppercase backdrop-blur">
+            <i data-lucide="party-popper" class="w-4 h-4 mr-2"></i>
+            Private Events in Nature
+          </span>
+          <h1 class="mt-5 font-heading text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-white">
+            Celebrate Under Open Skies at the <span class="text-earth-300">Aril Gardens Clubhouse</span>
+          </h1>
+          <p class="mt-5 text-base sm:text-lg text-white/85 max-w-xl">
+            Four luxury rooms, a swimming pool, a party lawn and a barbecue station, all set within a peaceful 3-acre farm retreat. Perfect for small private parties and intimate gatherings.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <a href="#booking" class="inline-flex justify-center items-center px-7 py-3.5 rounded-xl bg-earth-500 text-white font-semibold shadow-soft hover:bg-earth-600 transition">Check Availability</a>
+            <a href="#events" class="inline-flex justify-center items-center px-7 py-3.5 rounded-xl border border-white/50 bg-white/10 text-white font-semibold backdrop-blur hover:bg-white/20 transition">Explore Event Ideas</a>
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Key facts strip overlapping the hero -->
+    <section class="relative z-10 -mt-14 px-4 sm:px-6 lg:px-8" aria-label="Key facts">
+      <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-px bg-leaf-100 rounded-2xl overflow-hidden shadow-soft border border-leaf-100">
+        <div class="bg-white p-5 text-center"><p class="font-heading text-3xl font-extrabold text-leaf-700">4</p><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Luxury Rooms</p></div>
+        <div class="bg-white p-5 text-center"><p class="font-heading text-3xl font-extrabold text-earth-600">3</p><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Acre Retreat</p></div>
+        <div class="bg-white p-5 text-center"><i class="fa-solid fa-person-swimming text-3xl text-leaf-700"></i><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">Swimming Pool</p></div>
+        <div class="bg-white p-5 text-center"><i class="fa-solid fa-fire-burner text-3xl text-earth-600"></i><p class="mt-1 text-xs font-semibold uppercase tracking-wide text-leaf-800/80">BBQ Station</p></div>
+      </div>
+    </section>
+
+    <!-- Photo gallery -->
+    <section class="pt-20" aria-label="Clubhouse gallery">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          <figure class="img-zoom relative overflow-hidden rounded-2xl col-span-2 row-span-2 h-64 md:h-[26rem] reveal-on-scroll">
+            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=75" alt="Resort pool with wooden deck and sun loungers" loading="lazy" class="w-full h-full object-cover" />
+          </figure>
+          <figure class="img-zoom overflow-hidden rounded-2xl h-32 md:h-[12.5rem] reveal-on-scroll" data-delay="1">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=700&q=75" alt="Clean, modern hotel-style bedroom" loading="lazy" class="w-full h-full object-cover" />
+          </figure>
+          <figure class="img-zoom overflow-hidden rounded-2xl h-32 md:h-[12.5rem] reveal-on-scroll" data-delay="2">
+            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=75" alt="Barbecue ribs served with fresh vegetables" loading="lazy" class="w-full h-full object-cover" />
+          </figure>
+          <figure class="img-zoom overflow-hidden rounded-2xl h-32 md:h-[12.5rem] reveal-on-scroll" data-delay="2">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=700&q=75" alt="Modern house with a green lawn at dusk" loading="lazy" class="w-full h-full object-cover" />
+          </figure>
+          <figure class="img-zoom overflow-hidden rounded-2xl h-32 md:h-[12.5rem] reveal-on-scroll" data-delay="3">
+            <img src="https://images.unsplash.com/photo-1523301343968-6a6ebf63c672?auto=format&fit=crop&w=700&q=75" alt="Guests relaxing by a pool under string lights" loading="lazy" class="w-full h-full object-cover" />
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <!-- Event types -->
-    <section id="events" class="py-16">
+    <section id="events" class="py-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Events We Love to Host</h2>
+          <p class="eyebrow">Events</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Events We Love to Host</h2>
           <p class="mt-3 text-leaf-800/90">Select an event type to pre-fill your booking request.</p>
         </div>
 
         <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-5" id="eventCards">
-          <button type="button" data-event="Birthday Party" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="1">
-            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-cake-candles"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Birthday Parties</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">Pool fun, lawn games and a barbecue spread for all ages.</p>
+          <button type="button" data-event="Birthday Party" class="choice-card img-zoom text-left bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="h-40 overflow-hidden"><img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=700&q=75" alt="Colourful birthday balloons" loading="lazy" class="w-full h-full object-cover" /></div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Birthday Parties</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">Pool fun, lawn games and a barbecue spread for all ages.</p>
+            </div>
           </button>
-          <button type="button" data-event="Family Reunion" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="2">
-            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-people-roof"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Family Reunions</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">Room to relax, stay over and catch up in a calm setting.</p>
+          <button type="button" data-event="Family Reunion" class="choice-card img-zoom text-left bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="2">
+            <div class="h-40 overflow-hidden"><img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=700&q=75" alt="Long family dining table decorated with flowers" loading="lazy" class="w-full h-full object-cover" /></div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Family Reunions</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">Room to relax, stay over and catch up in a calm setting.</p>
+            </div>
           </button>
-          <button type="button" data-event="Anniversary / Celebration" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="3">
-            <div class="w-11 h-11 rounded-xl bg-earth-100 text-earth-700 flex items-center justify-center"><i class="fa-solid fa-champagne-glasses"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Anniversaries</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">Intimate evenings on the lawn with a romantic garden ambiance.</p>
+          <button type="button" data-event="Anniversary / Celebration" class="choice-card img-zoom text-left bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="3">
+            <div class="h-40 overflow-hidden"><img src="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&fit=crop&w=700&q=75" alt="Floral arch set up for an outdoor celebration" loading="lazy" class="w-full h-full object-cover" /></div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Anniversaries</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">Intimate evenings on the lawn with a romantic garden ambiance.</p>
+            </div>
           </button>
-          <button type="button" data-event="Corporate Retreat" class="choice-card text-left bg-white border border-leaf-100 rounded-2xl p-5 shadow-soft reveal-on-scroll" data-delay="1">
-            <div class="w-11 h-11 rounded-xl bg-leaf-100 text-leaf-700 flex items-center justify-center"><i class="fa-solid fa-briefcase"></i></div>
-            <h3 class="mt-4 font-heading text-lg font-bold text-leaf-900">Team Outings</h3>
-            <p class="mt-2 text-sm text-leaf-800/90">A refreshing break from the office for small teams.</p>
+          <button type="button" data-event="Corporate Retreat" class="choice-card img-zoom text-left bg-white border border-leaf-100 rounded-2xl overflow-hidden shadow-soft reveal-on-scroll" data-delay="1">
+            <div class="h-40 overflow-hidden"><img src="https://images.unsplash.com/photo-1575517111478-7f6afd0973db?auto=format&fit=crop&w=700&q=75" alt="Wooden deck with loungers at a quiet resort" loading="lazy" class="w-full h-full object-cover" /></div>
+            <div class="p-5">
+              <h3 class="font-heading text-lg font-bold text-leaf-900">Team Outings</h3>
+              <p class="mt-2 text-sm text-leaf-800/90">A refreshing break from the office for small teams.</p>
+            </div>
           </button>
         </div>
       </div>
     </section>
 
     <!-- Amenities -->
-    <section id="amenities" class="py-16 bg-leaf-50/60">
+    <section id="amenities" class="py-20 bg-leaf-50/70">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Everything for a Memorable Day</h2>
+          <p class="eyebrow">Amenities</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Everything for a Memorable Day</h2>
           <p class="mt-3 text-leaf-800/90">Thoughtfully designed spaces that make hosting effortless.</p>
         </div>
 
@@ -253,10 +299,11 @@
     </section>
 
     <!-- Packages (no prices published; quote on request) -->
-    <section id="packages" class="py-16">
+    <section id="packages" class="py-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-2xl mx-auto">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Choose Your Experience</h2>
+          <p class="eyebrow">Packages</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Choose Your Experience</h2>
           <p class="mt-3 text-leaf-800/90">Flexible options to fit your plans. Pricing is shared on request.</p>
         </div>
 
@@ -323,10 +370,11 @@
     </section>
 
     <!-- Booking form -->
-    <section id="booking" class="py-16">
+    <section id="booking" class="py-20">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Request Your Booking</h2>
+          <p class="eyebrow">Booking</p>
+          <h2 class="mt-2 font-heading text-3xl sm:text-4xl font-bold text-leaf-900">Request Your Booking</h2>
           <p class="mt-3 text-leaf-800/90">Tell us about your event and we will get back with availability.</p>
         </div>
 
@@ -403,11 +451,40 @@
   </main>
 
   <!-- Footer -->
-  <footer class="bg-leaf-900 text-leaf-50 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between gap-3">
-      <p class="text-sm">&copy; <span id="year"></span> Aril Gardens. All rights reserved.</p>
-      <p class="text-sm text-leaf-200"><a href="index.html" class="hover:text-white underline">Back to main site</a> | Clubhouse &amp; Event Venue</p>
-      <p class="text-sm text-leaf-200"><a href="tel:__CONTACT_PHONE__" class="hover:text-white underline">__CONTACT_PHONE__</a> | <a href="mailto:__CONTACT_EMAIL__" class="hover:text-white underline">__CONTACT_EMAIL__</a></p>
+  <footer class="bg-leaf-900 text-leaf-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-10 md:grid-cols-3">
+      <div>
+        <p class="inline-flex items-center gap-2 font-heading text-xl font-extrabold text-white">
+          <span class="inline-flex w-8 h-8 items-center justify-center rounded-lg bg-leaf-600 text-sm"><i class="fa-solid fa-leaf"></i></span>
+          Aril Gardens
+        </p>
+        <p class="mt-4 text-sm text-leaf-200 max-w-xs">A 3-acre farm retreat with 14 premium plots and an event-ready clubhouse.</p>
+      </div>
+
+      <div>
+        <p class="text-sm font-bold uppercase tracking-wide text-earth-300">Explore</p>
+        <ul class="mt-4 space-y-2 text-sm text-leaf-200">
+          <li><a href="index.html" class="hover:text-white">Home</a></li>
+          <li><a href="index.html#farm-plots" class="hover:text-white">Farm Plots</a></li>
+          <li><a href="#packages" class="hover:text-white">Packages</a></li>
+          <li><a href="#booking" class="hover:text-white">Book Now</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="text-sm font-bold uppercase tracking-wide text-earth-300">Get in Touch</p>
+        <ul class="mt-4 space-y-2 text-sm text-leaf-200">
+          <li><i class="fa-solid fa-phone w-5"></i><a href="tel:__CONTACT_PHONE__" class="hover:text-white">__CONTACT_PHONE__</a></li>
+          <li><i class="fa-solid fa-envelope w-5"></i><a href="mailto:__CONTACT_EMAIL__" class="hover:text-white">__CONTACT_EMAIL__</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row justify-between gap-2 text-xs text-leaf-300">
+        <p>&copy; <span id="year"></span> Aril Gardens. All rights reserved.</p>
+        <p>Photography via Unsplash</p>
+      </div>
     </div>
   </footer>
 
