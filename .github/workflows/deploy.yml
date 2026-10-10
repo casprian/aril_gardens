@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Deploy to garden subdomain (FTP)
 
 on:
   push:
@@ -7,15 +7,13 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
+  group: ftp-deploy
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     env:
       # Reads the key from a repository secret, falling back to a repository variable.
@@ -28,12 +26,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify access key is configured
+      - name: Verify required secrets are configured
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          if [ -z "$WEB3FORMS_ACCESS_KEY" ]; then
-            echo "::error::WEB3FORMS_ACCESS_KEY is not set. Add it under Settings > Secrets and variables > Actions."
-            exit 1
-          fi
+          missing=0
+          for name in WEB3FORMS_ACCESS_KEY FTP_SERVER FTP_USERNAME FTP_PASSWORD; do
+            if [ -z "${!name}" ]; then
+              echo "::error::$name is not set. Add it under Settings > Secrets and variables > Actions."
+              missing=1
+            fi
+          done
+          exit $missing
 
       - name: Build site with injected values
         run: |
@@ -51,21 +57,12 @@ jobs:
             exit 1
           fi
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload to garden folder over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./dist/
+          server-dir: ${{ vars.FTP_SERVER_DIR || '/public_html/garden/' }}
