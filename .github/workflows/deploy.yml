@@ -38,7 +38,7 @@ jobs:
       - name: Build site with injected values
         run: |
           mkdir -p dist
-          cp index.html clubhouse.html dist/
+          cp index.html clubhouse.html dist/garden
           CONTACT_PHONE_DIGITS="${CONTACT_PHONE//[^0-9]/}"
           sed -i \
             -e "s|__WEB3FORMS_ACCESS_KEY__|${WEB3FORMS_ACCESS_KEY}|g" \
