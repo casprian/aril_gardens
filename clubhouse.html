@@ -445,8 +445,9 @@
     const pad = (n) => String(n).padStart(2, '0');
     eventDateInput.min = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
 
-    // Web3Forms: get a free access key at https://web3forms.com (enter the email that should receive bookings).
-    const WEB3FORMS_ACCESS_KEY = '23ba790d-e2c9-45fb-a56f-6d807a97ac2e';
+    // Web3Forms access key. The placeholder is replaced at deploy time by the GitHub Actions workflow
+    // using the WEB3FORMS_ACCESS_KEY secret/variable (see .github/workflows/deploy.yml).
+    const WEB3FORMS_ACCESS_KEY = '__WEB3FORMS_ACCESS_KEY__';
 
     // Show a status message under the form (green = success, red = error).
     function showStatus(message, ok) {
@@ -533,7 +534,7 @@
         return;
       }
 
-      if (WEB3FORMS_ACCESS_KEY === 'YOUR_ACCESS_KEY_HERE') {
+      if (WEB3FORMS_ACCESS_KEY.startsWith('__')) {
         showStatus('Booking form is not configured yet. Please contact us directly.', false);
         return;
       }
